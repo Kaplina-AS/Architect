@@ -196,3 +196,94 @@
 | materialreq | Требуемый материал | ~ 500 заказов * 5 материалов/заказ * (0.5 KB/запись) = ~ 1250 KB = ~ 1.25 MB | ~ 3.7 MB |
 | operation | Производимые операции |~ 500 заказов * 3 операции/заказ * (0.5 KB/запись) = ~ 750 KB | 2.2 MB |
 | machine | Инфо о станках | ~ 2 записи * (0.5 KB/запись) = ~ 1 KB | 3 KB |
+
+#### Управление складом
+
+**INVENTORYITEM**
+| Поле | Тип |
+| --- | --- |
+| inventory_item_id | uuid |
+| product_id | uuid |
+| quantity  | integer |
+| location  | varchar(100) |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**INVENTORYTRANSACTION**
+| Поле | Тип |
+| --- | --- |
+| inventory_transaction_id | uuid |
+| inventory_item_id | uuid |
+| transaction_type | enum('in', 'out', 'adjustment') |
+| quantity  | integer |
+| reason | text |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**Ожидаемый прирост**
+
+| Тип | назначение | Месяц | Квартал |
+| --- | --- | --- | --- |
+| inventoryitem | Запасы на складе  | 50 новых товаров * (0.5 KB/запись) = ~ 25 KB | ~ 75 KB |
+| inventorytrancsaction | Транзакция по запасу | ~ 500 заказов * 2 транзакции/заказ * (0.5 KB/запись) + ~ 100 корректировок * (0.5 KB/запись) = ~ 550 KB | 1.6 MB |
+
+#### Каталог товаров
+
+**PRODUCT**
+
+| Поле | Тип |
+| --- | --- |
+| product_id | uuid |
+| name | varchar(50) |
+| description | text |
+| price | varchar(50) |
+| category_id | uuid |
+| brand_id | uuid |
+| materials | jsonb |
+| proportions | jsonb |
+| images | jsonArray |
+| status | enum ('active', ','inactive', 'discontinued') |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**CATEGORY**
+
+| Поле | Тип |
+| --- | --- |
+| category_id | uuid |
+| name | varchar(50) |
+| description | text |
+| parent_category_id | uuid |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**BRAND**
+
+| Поле | Тип |
+| --- | --- |
+| brand_id | uuid |
+| name | varchar(50) |
+| description | text |
+| logo_url | varchar |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**MATERIAL**
+
+| Поле | Тип |
+| --- | --- |
+| material_id | uuid |
+| name | varchar(100) |
+| description | text |
+| properties | jsonb |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**Ожидаемый прирост**
+
+| Тип | назначение | Месяц | Квартал |
+| --- | --- | --- | --- |
+| product | Товар | ~ 50 записей (изменения + новые) * (1-2 KB/запись) = ~ 50-100 KB | ~ 150-300 KB |
+| category | Категории товаров | ~ 10 записей * (0.5 KB/запись) = ~ 5 KB | ~ 15 KB |
+| brand | Бренды товаров |~ 2 записи * (0.5 KB/запись) = ~ 1 KB | 3 KB |
+| material | Материал изготовления товара | ~ 5 записей * (0.5 KB/запись) = ~ 2.5 KB | 7.5 KB |
