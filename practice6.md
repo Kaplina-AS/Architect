@@ -287,3 +287,128 @@
 | category | Категории товаров | ~ 10 записей * (0.5 KB/запись) = ~ 5 KB | ~ 15 KB |
 | brand | Бренды товаров |~ 2 записи * (0.5 KB/запись) = ~ 1 KB | 3 KB |
 | material | Материал изготовления товара | ~ 5 записей * (0.5 KB/запись) = ~ 2.5 KB | 7.5 KB |
+
+#### Заказы
+
+**ORDER**
+
+| Поле | Тип |
+| --- | --- |
+| order_id | uuid |
+| user_id | uuid |
+| order_date | timestamp
+| total_amount | decimal(10,2) | 
+| shipping_address_id | uuid |
+| billing_address_id | uuid |
+| status | enum ('pending', 'processing', 'shipped', 'delivered', 'cancelled') |
+| bpayment_method | enum ('credit_card', 'paypal', 'bank_transfer') |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**ORDERITEM**
+
+| Поле | Тип |
+| --- | --- |
+| order_item_id | uuid |
+| order_id | uuid |
+| product_id | uuid |
+| quantity | integer |
+| price  | decimal(10,2) |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**SHIPPINGADDRESS**
+
+| Поле | Тип |
+| --- | --- |
+| shipping_address_id | uuid |
+| region | varchar(50) |
+| city | varchar(50) |
+| street | varchar(50) |
+| district | varchar(50) |
+| postcode | varchar(10) |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**BILLINGADDRESS**
+
+| Поле | Тип |
+| --- | --- |
+| billing_address_id | uuid |
+| region | varchar(50) |
+| city | varchar(50) |
+| street | varchar(50) |
+| district | varchar(50) |
+| postcode | varchar(10) |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**Ожидаемый прирост**
+
+| Тип | назначение | Месяц | Квартал |
+| --- | --- | --- | --- |
+| order | Информация о заказе | ~ 500 записей * (1 KB/запись) = ~ 500 KB | ~ 1.5 MB |
+| orderitem | Позиции в заказе | ~ 500 заказов * 3 товара/заказ * (0.5 KB/запись) = ~ 750 KB | ~ 2.2 MB |
+| shippingaddress | Адреса доставки |~ 400 записей * (0.5 KB/запись) = ~ 200 KB (часть адресов совпадает с существующими) | 800 KB |
+| billingaddress | Выставление счета | ~ 400 записей * (0.5 KB/запись) = ~ 200 KB (часть адресов совпадает с существующими) | 600 KB |
+
+#### Платежи
+
+**PAYMENT**
+
+| Поле | Тип |
+| --- | --- |
+| payment_id | uuid |
+| order_id | uuid |
+| payment_date | timestamp |
+| amount | decimal(10,2) |
+| payment_method | enum ('credit_card', 'paypal', 'bank_transfer') |
+| transaction_id | varchar(50) |
+| status | enum ('pending', 'approved', 'declined', 'refunded') |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+
+**Ожидаемый прирост**
+
+| Тип | назначение | Месяц | Квартал |
+| --- | --- | --- | --- |
+| payment | Информация о платеже | ~ 500 записей * (1 KB/запись) = ~ 500 KB | ~ 1.5 MB |
+
+#### Управление логистикой
+
+**DELIVERY**
+
+| Поле | Тип |
+| --- | --- |
+| delivery_id | uuid |
+| order_id | uuid |
+| shipping_address_id | uuid |
+| tracking_number | varchar(50) |
+| carrier  | varchar(50) |
+| status | enum ('pending', 'in_transit', 'delivered', 'failed') |
+| expected_delivery_date | date |
+| actual_delivery_date | date |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**DELIVERYEVENT**
+
+| Поле | Тип |
+| --- | --- |
+| delivery_event_id | uuid |
+| delivery_id | uuid |
+| event_time | timestamp |
+| location  | GEOGRAPHYPOINT |
+| description  | text |
+| status | enum ('pending', 'approved', 'declined', 'refunded') |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+
+**Ожидаемый прирост**
+
+| Тип | назначение | Месяц | Квартал |
+| --- | --- | --- | --- |
+| delivery | Информация о доставке | ~ 500 записей * (1 KB/запись) = ~ 500 KB | ~ 1.5 MB |
+| deliveryevent | Информация о событии доставки |~ 500 доставок * 5 событий/доставка * (0.5 KB/запись) = ~ 1250 KB = ~ 1.25 MB | ~ 3.7 MB |
