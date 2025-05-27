@@ -133,3 +133,66 @@
 | --- | --- | --- | --- |
 | user | Профиль пользователя | ~ 1000 записей * (1 KB/запись) + ~ 200 записей (изменения) * (0.5 KB/запись) = ~ 1100 KB = ~ 1.1 MB | ~ 3.3 MB |
 | address | Адресные данные | ~ 800 записей * (0.5 KB/запись) = ~ 400 KB (предполагаем, что часть пользователей использует один и тот же адрес,либо не указывает адрес) | 1.2 MB |
+
+#### Управление производством
+
+**PRODUCTORDER (производственный заказ)**
+
+| Поле | Тип |
+| --- | --- |
+| product_order_id | uuid |
+| order_id | uuid |
+| product_id | uuid |
+| quantity | integer |
+| start_date | timestamp |
+| end_date | timestamp |
+| status | enum ('created', ','progress', 'completed', 'canceled') |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**MATEARIALREQ (потребность в материале)**
+
+| Поле | Тип |
+| --- | --- |
+| material_req_id | uuid |
+| product_order_id | uuid |
+| material_id | uuid |
+| quantity | decimal (10,2) |
+| init | varchar(50) |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**OPERATION (операция)**
+
+| Поле | Тип |
+| --- | --- |
+| operation_id | uuid |
+| product_order_id | uuid |
+| stage | integer |
+| description | text |
+| machine_id | uuid |
+| employee_id | uuid |
+| duration | integer |
+| status | enum ('created', ','progress', 'completed') |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**MACHINE (Станки)**
+
+| Поле | Тип |
+| --- | --- |
+| machine_id | uuid |
+| name | varchar(100) |
+| description | text |
+| status | enum ('active', ','inactive', 'maintenance') |
+| created_at | timestamp |
+| updated_at | timestamp |
+
+**Ожидаемый прирост**
+
+| Тип | назначение | Месяц | Квартал |
+| --- | --- | --- | --- |
+| productorder | Производственный заказ | ~ 500 записей * (1 KB/запись) = ~ 500 KB | ~ 1.5 MB |
+| materialreq | Требуемый материал | ~ 500 заказов * 5 материалов/заказ * (0.5 KB/запись) = ~ 1250 KB = ~ 1.25 MB | ~ 3.7 MB |
+| operation | Производимые операции |~ 500 заказов * 3 операции/заказ * (0.5 KB/запись) = ~ 750 KB | 2.2 MB |
+| machine | Инфо о станках | ~ 2 записи * (0.5 KB/запись) = ~ 1 KB | 3 KB |
